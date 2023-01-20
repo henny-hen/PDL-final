@@ -1,0 +1,106 @@
+
+Terminales = { += == int string else boolean true false ; ( ) cadena let id num , = print input function { } + return if for ! }
+
+NoTerminales = { Sp S Sentencias Func Tipoo Parametro Parametros Declaracion Asignaciondec Asignaciona Asignacion Op Opp Var Opar Logico Retorno Oppp Entsal Llamadaf Argumento Argumentos Argumentoss Senfor Cond Inic Senif Senif2 Senelse Sentencia }
+
+Axioma = Sp
+
+Producciones = {
+
+Sp -> S
+
+S -> Sentencias
+S -> Func S
+
+Func -> function id Tipoo ( Parametro ) { Sentencias }
+
+Parametro -> Tipoo id Parametros
+Parametros -> lambda
+Parametros -> , Tipoo id Parametros
+Parametros -> lambda
+
+Sentencias -> Declaracion ; S
+Sentencias -> Asignacion ; S
+Sentencias -> Entsal ; S
+Sentencias -> Llamadaf ; S
+Sentencias -> Senfor ; S
+Sentencias -> Senif ; S
+Sentencias -> Retorno ; S
+Sentencias -> Asignaciona ; S
+Sentencias -> lambda
+
+
+Declaracion -> let id Tipoo Asignaciondec
+Asignaciondec -> = Op
+Asignaciondec -> lambda
+
+Asignacion -> id = Op
+
+Asignaciona -> id += Var
+
+Op -> Var Opp
+Op -> cadena
+Op -> ! id
+Op -> Logico
+
+
+Opp -> Opar Var Opp
+Opp -> == Op
+Opp -> lambda
+
+
+Retorno -> return Oppp
+
+Entsal -> input Oppp
+Entsal -> print Oppp
+
+Oppp -> ( Op )
+Oppp -> Op
+
+Llamadaf -> id ( Argumento )
+Argumento -> Llamadaf Argumentos
+Argumento -> Op Argumentos
+Argumento -> lambda
+
+Argumentos -> , Argumentoss Argumentos
+Argumentos -> lambda
+
+Argumentoss -> Llamadaf
+Argumentoss -> Op
+
+Senfor -> for ( Inic ; Cond ; ) { Sentencias }
+
+Inic -> id = Var Opp
+Inic -> lambda
+
+Senif -> if ( Cond ) Senif2 Senelse
+
+Senif2 -> { Sentencias }
+Senif2 -> Sentencia
+
+Senelse -> else Senif2
+Senelse -> lambda
+
+Cond -> Var == Var Opp
+
+Tipoo -> string
+Tipoo -> int
+Tipoo -> boolean
+
+Var -> num
+Var -> id 
+
+Logico -> true
+Logico -> false
+
+Opar -> +
+
+Sentencia -> Declaracion ; 
+Sentencia -> Asignacion ; 
+Sentencia -> Entsal ; 
+Sentencia -> Llamadaf ; 
+Sentencia -> Retorno ; 
+Sentencia -> Asignaciona ;
+Sentencia -> lambda
+
+}
