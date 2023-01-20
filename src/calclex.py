@@ -12,7 +12,6 @@ class CalcLexer(Lexer):
                CAD, COM, PYC, PARI, PARF, CORI, 
                CORF, TRUE, FALSE }
 
-
     literals = { '(', ')', '{', '}', ';', ',' }
 
     # String containing ignored characters
