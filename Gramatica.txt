@@ -1,0 +1,15 @@
+A := delA|'B|dC|+D|=D|!|lE|_E|{|}|(|)|/F|;|,
+B := o.c1B|'
+C := dC|lambda
+D := =|lambda
+E := dE|_E|lE|lambda
+F := /G
+G := o.c2G|CR
+
+
+del=>delimitador
+d=>digito
+l=>letra
+o.c =>otro carácter
+o.c1=>otro caracter menos '
+o.c2=>otro caracter menos CR
