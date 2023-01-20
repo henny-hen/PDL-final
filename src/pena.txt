@@ -1,0 +1,9 @@
+let int a;
+function string uno(int x, int y){
+let int b;
+return "";
+}
+let int n;
+while (n==10){
+n-=1;
+}

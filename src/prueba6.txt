@@ -1,0 +1,4 @@
+if(bo)n=c;
+while n>c{
+n=c;
+}

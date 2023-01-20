@@ -1,0 +1,5 @@
+let int a;
+let boolean bo;
+while !bo{
+bo=true;
+}

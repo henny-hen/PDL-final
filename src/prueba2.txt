@@ -1,0 +1,5 @@
+let int n;
+let int c;
+let boolean bo;
+// booleano
+if(!bo)n=c;

@@ -1,0 +1,4 @@
+function a23 int (int a,boolean b){
+     
+    return 2;
+}

@@ -1,0 +1,17 @@
+TABLA # 1 : 
+ 
+* LEXEMA: 'bo' 
+	 Atributos: 
+	 + tipo = - 
+	 + despl = 1 
+-----------  ------------ 
+* LEXEMA: 'n' 
+	 Atributos: 
+	 + tipo = - 
+	 + despl = 2 
+-----------  ------------ 
+* LEXEMA: 'c' 
+	 Atributos: 
+	 + tipo = - 
+	 + despl = 3 
+-----------  ------------ 

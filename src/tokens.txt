@@ -1,0 +1,17 @@
+< 'IF' , if >
+< 'PARI' ,  >
+< 'bo' , 1 > 
+< 'PARF' ,  >
+< 'n' , 2 > 
+< 'ASSIGN' ,  >
+< 'c' , 3 > 
+< 'PYC' ,  >
+< 'WHILE' , while >
+< 'n' , 2 > 
+< 'c' , 3 > 
+< 'CORI' ,  >
+< 'n' , 2 > 
+< 'ASSIGN' ,  >
+< 'c' , 3 > 
+< 'PYC' ,  >
+< 'CORF' ,  >
