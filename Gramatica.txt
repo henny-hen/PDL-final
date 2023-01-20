@@ -13,3 +13,4 @@ l=>letra
 o.c =>otro carácter
 o.c1=>otro caracter menos '
 o.c2=>otro caracter menos CR
+
