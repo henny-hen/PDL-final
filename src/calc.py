@@ -6,14 +6,18 @@ import sys
 sys.path.insert(0, '../..')
 
 from sly import Lexer, Parser
+
+
+
 class CalcLexer(Lexer):
     # Set of token names.   This is always required
-    tokens = { NUM, ID, IF, ELSE, PRINT,
+    tokens = { NUM, ID, PRINT,
                MAS, MASI, ASSIGN, INPUT,
                EQQ, DIF, RETURN, STRING, FUNCTION
                , INT, BOOLEAN, LET, FOR, 
                CAD, COM, PYC, PARI, PARF, CORI, 
-               CORF, TRUE, FALSE }
+               CORF, TRUE, FALSE, LESI, MUL }
+
 
     literals = { '(', ')', '{', '}', ';', ',' }
 
@@ -22,6 +26,7 @@ class CalcLexer(Lexer):
     ignore_comment = r'//.*'
     # Regular expression rules for tokens
     MASI    = r'\+='
+    LESI   = r'-'
     MAS    = r'\+'
     EQQ      = r'=='
     ASSIGN  = r'='
@@ -32,7 +37,7 @@ class CalcLexer(Lexer):
     PARF   = r'\)'
     CORI   = r'\{'
     CORF   = r'\}'
-
+    MUL   = r'\*'
 
 
 
@@ -88,20 +93,24 @@ class CalcLexer(Lexer):
     def DIF(self,t):
         t.value = ''
         return t
+    @_(r'-')
+    def LESI(self,t):
+        t.value = ''
+        return t
 
     @_(r'\d+')
     def NUM(self, t):
         t.value = int(t.value)
-      #  if t.value > 32768:
-       #             print ('Error en linea %d: numero excede el rango (%r)' % (self.lineno, t.value))
-        #            fd2 = open("errores.txt", "a")
-         #           fd2.write('Error en linea %d: numero excede el rango (%r)' % (self.lineno, t.value))
-          #          fd2.write('\n')
-       # elif t.value < -32768:
-        #            print ('Error en linea %d: numero excede el rango (%r)' % (self.lineno, t.value))
-         #           fd2 = open("errores.txt", "a")
-          #          fd2.write('Error en linea %d: numero excede el rango (%r)' % (self.lineno, t.value))
-           #         fd2.write('\n')
+        if t.value > 32768:
+                    print ('Error en linea %d: numero excede el rango (%r)' % (self.lineno, t.value))
+                    fd2 = open("errores.txt", "a")
+                    fd2.write('Error en linea %d: numero excede el rango (%r)' % (self.lineno, t.value))
+                    fd2.write('\n')
+        elif t.value < -32768:
+                    print ('Error en linea %d: numero excede el rango (%r)' % (self.lineno, t.value))
+                    fd2 = open("errores.txt", "a")
+                    fd2.write('Error en linea %d: numero excede el rango (%r)' % (self.lineno, t.value))
+                    fd2.write('\n')
 
         #else:
         return t
@@ -118,10 +127,8 @@ class CalcLexer(Lexer):
 
 
     # Identifiers and keywords
-    CAD = r'[\'][a-zA-Z0-9_\s,%.():;<>?!]*[\']'
+    CAD = r'[\'][a-zA-Z0-9_\s,%.():;<>?!\+\-\*\/{}\[\]=]*[\']'
     ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
-    ID['if'] = IF
-    ID['else'] = ELSE
     ID['print'] = PRINT
     ID['for'] = FOR
     ID['function'] = FUNCTION
@@ -143,10 +150,10 @@ class CalcLexer(Lexer):
 
 
     def error(self, t):
-     #   print('Error en linea %d: caracter incorrecto (%r)' % (self.lineno, t.value[0]))
-      #  fd2 = open("errores.txt", "a") 
-       # fd2.write('Error en linea %d: caracter incorrecto (%r)' % (self.lineno, t.value[0]))
-        #fd2.write('\n')
+        print('Lexer: Error en linea %d: caracter incorrecto (%r)' % (self.lineno, t.value[0]))
+        fd2 = open("errores.txt", "a") 
+        fd2.write('LEXER: Error en linea %d: caracter incorrecto (%r)' % (self.lineno, t.value[0]))
+        fd2.write('\n')
         self.index += 1
 
 
@@ -155,289 +162,308 @@ class CalcLexer(Lexer):
 
 class CalcParser(Parser):
     tokens = CalcLexer.tokens
+    debugfile = 'parser.out'
 
     def __init__(self):
         self.names = { }
 
-    @_('s')
-    def sp(self, p):
-        parseFinal.write('1 ')
 
-    @_('sentencias')
-    def s(self, p):
+    @_('Sl')
+    def Sp(self, p):
+        parseFinal.write('1 ')
+    
+    @_('S Sl')
+    def Sl(self, p):
         parseFinal.write('2 ')
 
-    @_('func s')
-    def s(self, p):
-        parseFinal.write('3 ')
-
-    @_('FUNCTION ID tipoo PARI parametro PARF CORI sentencias CORF')
-    def func(self, p):
-        parseFinal.write('4 ')
-    
-    @_('tipoo ID parametros')
-    def parametro(self, p):
-        parseFinal.write('5 ')
-    
     @_('')
-    def parametro(self, p):
-        parseFinal.write('6 ')
+    def Sl(self, p):
+        parseFinal.write('3 ')
+    
+    @_('Vd PYC')
+    def S(self, p):
+        parseFinal.write('4 ')
 
-    @_('COM tipoo ID parametros')
-    def parametros(self, p):
+    @_('Aas PYC')
+    def S(self, p):
+        parseFinal.write('5 ')
+
+    @_('Fd')
+    def S(self, p):
+        parseFinal.write('6 ')
+    
+    @_('Fl')
+    def S(self, p):
         parseFinal.write('7 ')
 
-    @_('')
-    def parametros(self, p):
+    @_('Ps PYC')
+    def S(self, p):
         parseFinal.write('8 ')
 
-    @_('declaracion PYC s')
-    def sentencias(self, p):
+    @_('Iis PYC')
+    def S(self, p):
         parseFinal.write('9 ')
-
-    @_('asignacion PYC s')
-    def sentencias(self, p):
+    
+    @_('Fcs PYC')
+    def S(self, p):
         parseFinal.write('10 ')
 
-    @_('entsal PYC s')
-    def sentencias(self, p):
+    @_('LET ID Ty Opi')
+    def Vd(self, p):
         parseFinal.write('11 ')
 
 
-    @_('llamadaf PYC s')
-    def sentencias(self, p):
+
+
+    @_('STRING')
+    def Ty(self, p):
         parseFinal.write('12 ')
 
 
-    @_('senfor PYC s')
-    def sentencias(self, p):
+    @_('INT')
+    def Ty(self, p):
         parseFinal.write('13 ')
 
-    @_('senif PYC s')
-    def sentencias(self, p):
+
+    @_('BOOLEAN')
+    def Ty(self, p):
         parseFinal.write('14 ')
 
-    @_('retorno PYC s')
-    def sentencias(self, p):
+
+    @_('ASSIGN Ex')
+    def Opi(self, p):
         parseFinal.write('15 ')
 
-
-    @_('asignaciona PYC s')
-    def sentencias(self, p):
+    @_('')
+    def Opi(self, p):
         parseFinal.write('16 ')
 
-    @_('')
-    def sentencias(self, p):
+    @_('ID ASSIGN Ex')
+    def Aas(self, p):
         parseFinal.write('17 ')
-
-
-
-
-    @_('LET ID tipoo asignaciondec')
-    def declaracion(self, p):
+       
+     
+            
+    @_('ID MASI Ex')
+    def Aas(self, p):
         parseFinal.write('18 ')
 
-    @_('ASSIGN op')
-    def asignaciondec(self, p):
+
+    @_('FUNCTION ID Ty PARI Pl PARF CORI Sl Rs CORF ')
+    def Fd(self, p):
         parseFinal.write('19 ')
 
-    @_('')
-    def asignaciondec(self, p):
+    @_('FUNCTION ID PARI Pl PARF CORI Sl CORF ')
+    def Fd(self, p):
         parseFinal.write('20 ')
 
-    @_('ID ASSIGN op')
-    def asignacion(self, p):
-        parseFinal.write('21 ') 
+    @_('P Mp')
+    def Pl(self, p):
+        parseFinal.write('21 ')
 
-
-    @_('ID MASI var')
-    def asignaciona(self, p):
+    @_('')
+    def Pl(self, p):
         parseFinal.write('22 ')
 
-    @_('var opp')
-    def op(self, p):
+    @_('Ty ID')
+    def P(self, p):
         parseFinal.write('23 ')
 
-    @_('CAD')
-    def op(self, p):
+    @_('COM P Mp')
+    def Mp(self, p):
         parseFinal.write('24 ')
 
-    @_('DIF ID')
-    def op(self, p):
+    @_('')
+    def Mp(self, p):
         parseFinal.write('25 ')
 
-    @_('logico')
-    def op(self, p):
+    @_('FOR PARI Fi PYC Ex PYC Fu PARF CORI Sl CORF')
+    def Fl(self, p):
         parseFinal.write('26 ')
 
-    @_('opar var opp')
-    def opp(self, p):
+    @_('')
+    def Fi(self, p):
         parseFinal.write('27 ')
 
-    @_('EQQ op')
-    def opp(self, p):
+    @_('Aas')
+    def Fi(self, p):
         parseFinal.write('28 ')
-    @_('')
-    def opp(self, p):
+
+    @_('Aas')
+    def Fu(self, p):
         parseFinal.write('29 ')
 
-    @_('RETURN oppp')
-    def retorno(self, p):
+    @_('Se Op Ex')
+    def Ex(self, p):
         parseFinal.write('30 ')
 
-    @_('INPUT oppp')
-    def entsal(self, p):
+                    
+    @_('DIF Ex')
+    def Ex(self, p):
         parseFinal.write('31 ')
 
-    @_('PRINT oppp')
-    def entsal(self, p):
+       
+    @_('Se')
+    def Ex(self, p):
         parseFinal.write('32 ')
+ 
 
-    @_('PARI op PARF')
-    def oppp(self, p):
+    @_('Fc')
+    def Ex(self, p):
         parseFinal.write('33 ')
 
-    @_('op')
-    def oppp(self, p):
+    @_('ID')
+    def Se(self, p):
         parseFinal.write('34 ')
 
-    @_('ID PARI argumento PARF')
-    def llamadaf(self, p):
+
+
+    @_('Li')
+    def Se(self, p):
         parseFinal.write('35 ')
 
-    @_('llamadaf argumentos')
-    def argumento(self, p):
+    @_('PARI Ex PARF')
+    def Se(self, p):
         parseFinal.write('36 ')
-
-    @_('op argumentos')
-    def argumento(self, p):
+        
+    @_('MAS')
+    def Op(self, p):
         parseFinal.write('37 ')
 
-    @_('')
-    def argumento(self, p):
+        
+    @_('EQQ')
+    def Op(self, p):
         parseFinal.write('38 ')
 
-    @_('COM argumentoss argumentos')
-    def argumentos(self, p):
+
+    @_('LESI')
+    def Op(self, p):
         parseFinal.write('39 ')
 
-    @_('')
-    def argumentos(self, p):
+
+    @_('MUL')
+    def Op(self, p):
         parseFinal.write('40 ')
 
-    @_('llamadaf')
-    def argumentoss(self, p):
+    @_('NUM')
+    def Li(self, p):
         parseFinal.write('41 ')
 
-    @_('op')
-    def argumentoss(self, p):
+
+
+    @_('CAD')
+    def Li(self, p):
         parseFinal.write('42 ')
 
-    @_('FOR PARI inic PYC cond PYC PARF CORI sentencias CORF')
-    def senfor(self, p):
+
+    @_('Bo')
+    def Li(self, p):
         parseFinal.write('43 ')
 
-    @_('ID ASSIGN var opp')
-    def inic(self, p):
+
+    @_('TRUE')
+    def Bo(self, p):
         parseFinal.write('44 ')
 
-    @_('')
-    def inic(self, p):
+
+    @_('FALSE')
+    def Bo(self, p):
         parseFinal.write('45 ')
 
-    @_('IF PARI cond PARF senif2 senelse')
-    def senif(self, p):
+
+    @_('RETURN Ex PYC')
+    def Rs(self, p):
         parseFinal.write('46 ')
 
-    @_('CORI sentencias CORF')
-    def senif2(self, p):
+    @_('PRINT Ex')
+    def Ps(self, p):
         parseFinal.write('47 ')
 
-    @_('sentencia')
-    def senif2(self, p):
+    @_('ID PARI Al PARF')
+    def Fc(self, p):
         parseFinal.write('48 ')
 
-    @_('ELSE senif2')
-    def senelse(self, p):
+    @_('Ex Ma')
+    def Al(self, p):
         parseFinal.write('49 ')
 
     @_('')
-    def senelse(self, p):
-        parseFinal.write('50 ')
-    
-    @_('var EQQ var opp')
-    def cond(self, p):
+    def Al(self, p):
+        parseFinal.write('50 ')  
+
+    @_('COM Ex Ma')
+    def Ma(self, p):
         parseFinal.write('51 ')
 
-    @_('STRING')
-    def tipoo(self, p):
+    @_('')
+    def Ma(self, p):
         parseFinal.write('52 ')
 
-    @_('INT')
-    def tipoo(self, p):
+    @_('INPUT ID')
+    def Iis(self, p):
         parseFinal.write('53 ')
 
-    @_('BOOLEAN')
-    def tipoo(self, p):
+    @_('Fc')
+    def Fcs(self, p):
         parseFinal.write('54 ')
 
-    @_('NUM')
-    def var(self, p):
-        parseFinal.write('55 ')
 
-    @_('ID')
-    def var(self, p):
-        parseFinal.write('56 ')
+    def error(self, p):
+        print('PARSER: Error en linea %d' % (p.lineno))
+        fd2 = open("errores.txt", "a") 
+        fd2.write('PARSER: Error en linea %d' % (p.lineno))
+        fd2.write('\n')
+        print('error in PYC')
+        print(p)
+        if p == None:
+            print('PARSER: Error en EOF')
+            
+        elif p.type in ('FOR', 'FUNCTION'):
+            skip = 'CORF'
+        else:
+            skip = 'PYC'
+        while tok := next(self.tokens, None):
+            if tok.type == skip:
+                break
+        self.restart()
 
-    @_('TRUE')
-    def logico(self, p):
-        parseFinal.write('57 ')
 
-    @_('FALSE')
-    def logico(self, p):
-        parseFinal.write('58 ')
-
-    @_('MAS')
-    def opar(self, p):
-        parseFinal.write('59 ')
-
-    @_('declaracion PYC')
-    def sentencia(self, p):
-        parseFinal.write('60 ')
-
-    @_('asignacion PYC')
-    def sentencia(self, p):
-        parseFinal.write('61 ')
-
-    @_('entsal PYC')
-    def sentencia(self, p):
-        parseFinal.write('62 ')
-
-    @_('llamadaf PYC')
-    def sentencia(self, p):
-        parseFinal.write('63 ')
-
-    @_('retorno PYC')
-    def sentencia(self, p):
-        parseFinal.write('64 ')
-
-    @_('asignaciona PYC')
-    def sentencia(self, p):
-        parseFinal.write('65 ')
-
-    @_('')
-    def sentencia(self, p):
-        parseFinal.write('66 ')
 
 if __name__ == '__main__':
+
+    TS = {}
+    numTS = 1
+    posTS = 1
+
     lexer = CalcLexer()
     parser = CalcParser()
     parseFinal = open('parseFinal.txt','w')
     parseFinal.write("Ascendente \t")
     fd = open(sys.argv[1], 'r')
+
+    fd2 = open("errores.txt", "w") 
+    fd3 = open("tokens.txt", "w")
     txt = fd.read()
 
     parser.parse(lexer.tokenize(txt))
 
+    for tok in lexer.tokenize(txt):
+        fd3 = open("tokens.txt", "a") 
+        if((tok.type == 'ID')):
+            if(TS.get(tok.value, -1) == -1):
+                # print("lexema")
+                TS[tok.value] = posTS
+                TS[tok.value + '.type'] = '-'
+                posTS += 1
+            print("< %r , %d >" % (tok.value, TS.get(tok.value)))
+            fd3.write("< %r , %d > \n" % (tok.value, TS.get(tok.value)))
+        else:
+            print("< %r , %s >" % (tok.type, tok.value))
+            fd3.write("< %r , %s >" % (tok.type, tok.value))
+            fd3.write('\n')
 
     parseFinal.close()
+    fd2.close()
+    fd3.close()
+
+
