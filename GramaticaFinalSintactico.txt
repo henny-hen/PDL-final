@@ -1,106 +1,62 @@
+Terminales = { += == int string else boolean true false ; ( ) cadena let id num , = print input function { } + return - * for ! }
 
-Terminales = { += == int string else boolean true false ; ( ) cadena let id num , = print input function { } + return if for ! }
-
-NoTerminales = { Sp S Sentencias Func Tipoo Parametro Parametros Declaracion Asignaciondec Asignaciona Asignacion Op Opp Var Opar Logico Retorno Oppp Entsal Llamadaf Argumento Argumentos Argumentoss Senfor Cond Inic Senif Senif2 Senelse Sentencia }
+NoTerminales = { Aas Al Bo Ex Fc Fd Fi Fl Fu Iis Li Ma Mp Op Opi P Pl Ps Rs S Se Sl Sp Ty Vd Fcs }
 
 Axioma = Sp
 
 Producciones = {
-
-Sp -> S
-
-S -> Sentencias
-S -> Func S
-
-Func -> function id Tipoo ( Parametro ) { Sentencias }
-
-Parametro -> Tipoo id Parametros
-Parametros -> lambda
-Parametros -> , Tipoo id Parametros
-Parametros -> lambda
-
-Sentencias -> Declaracion ; S
-Sentencias -> Asignacion ; S
-Sentencias -> Entsal ; S
-Sentencias -> Llamadaf ; S
-Sentencias -> Senfor ; S
-Sentencias -> Senif ; S
-Sentencias -> Retorno ; S
-Sentencias -> Asignaciona ; S
-Sentencias -> lambda
-
-
-Declaracion -> let id Tipoo Asignaciondec
-Asignaciondec -> = Op
-Asignaciondec -> lambda
-
-Asignacion -> id = Op
-
-Asignaciona -> id += Var
-
-Op -> Var Opp
-Op -> cadena
-Op -> ! id
-Op -> Logico
-
-
-Opp -> Opar Var Opp
-Opp -> == Op
-Opp -> lambda
-
-
-Retorno -> return Oppp
-
-Entsal -> input Oppp
-Entsal -> print Oppp
-
-Oppp -> ( Op )
-Oppp -> Op
-
-Llamadaf -> id ( Argumento )
-Argumento -> Llamadaf Argumentos
-Argumento -> Op Argumentos
-Argumento -> lambda
-
-Argumentos -> , Argumentoss Argumentos
-Argumentos -> lambda
-
-Argumentoss -> Llamadaf
-Argumentoss -> Op
-
-Senfor -> for ( Inic ; Cond ; ) { Sentencias }
-
-Inic -> id = Var Opp
-Inic -> lambda
-
-Senif -> if ( Cond ) Senif2 Senelse
-
-Senif2 -> { Sentencias }
-Senif2 -> Sentencia
-
-Senelse -> else Senif2
-Senelse -> lambda
-
-Cond -> Var == Var Opp
-
-Tipoo -> string
-Tipoo -> int
-Tipoo -> boolean
-
-Var -> num
-Var -> id 
-
-Logico -> true
-Logico -> false
-
-Opar -> +
-
-Sentencia -> Declaracion ; 
-Sentencia -> Asignacion ; 
-Sentencia -> Entsal ; 
-Sentencia -> Llamadaf ; 
-Sentencia -> Retorno ; 
-Sentencia -> Asignaciona ;
-Sentencia -> lambda
-
+Sp -> Sl
+Sl -> S Sl
+Sl -> lambda
+S -> Vd ;
+S -> Aas ;
+S -> Fd
+S -> Fl
+S -> Ps ;
+S -> Iis ;
+S -> Fcs ;
+Vd -> let id Ty Opi
+Ty -> string
+Ty -> int
+Ty -> boolean
+Opi -> = Ex
+Opi -> lambda
+Aas -> id = Ex
+Aas -> id += Ex
+Fd -> function id Ty ( Pl ) { Sl Rs }
+Fd -> function id ( Pl ) { Sl }
+Pl -> P Mp
+Pl -> lambda
+P -> Ty id
+Mp -> , P Mp
+Mp -> lambda
+Fl -> for ( Fi ; Ex ; Fu ) { Sl }
+Fi -> lambda
+Fi -> Aas
+Fu -> Aas
+Ex -> Se Op Ex
+Ex -> ! Ex
+Ex -> Se
+Ex -> Fc
+Se -> id
+Se -> Li
+Se -> ( Ex )
+Op -> +
+Op -> ==
+Op -> -
+Op -> *
+Li -> num
+Li -> cadena
+Li -> Bo
+Bo -> true
+Bo -> false
+Rs -> return Ex ;
+Ps -> print Ex
+Fc -> id ( Al )
+Al -> Ex Ma
+Al -> lambda
+Ma -> , Ex Ma
+Ma -> lambda
+Iis -> input id
+Fcs -> Fc
 }
